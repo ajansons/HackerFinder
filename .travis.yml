@@ -1,0 +1,13 @@
+  language: python
+  python:
+    - "3.7"
+  script:
+    - pyinstaller --onefile --name hackerfinder main.py
+  # deploy:
+  #   provider: releases
+  #   api_key:
+  #     secure: "<encrypted-token>"
+  #   file: dist/hackerfinder
+  #   skip_cleanup: true
+  #   on:
+  #     tags
