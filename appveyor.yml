@@ -1,4 +1,7 @@
+version: 1.0.{build}
+
 environment:
+
   global:
     # SDK v7.0 MSVC Express 2008's SetEnv.cmd script will fail if the
     # /E:ON and /V:ON options are not enabled in the batch script intepreter
@@ -6,13 +9,15 @@ environment:
     CMD_IN_ENV: "cmd /E:ON /V:ON /C .\\appveyor\\run_with_env.cmd"
 
   matrix:
+    - PYTHON: "C:\\Python37"
+      PYTHON_VERSION: "3.7.x" 
+      PYTHON_ARCH: "32"
 
     - PYTHON: "C:\\Python37-x64"
       PYTHON_VERSION: "3.7.x" 
       PYTHON_ARCH: "64"
 
 install:
-  
   # Install the build dependencies of the project. If some dependencies contain
   # compiled extensions and are not provided as pre-built wheel packages,
   # pip will build them from source using the MSVC compiler matching the
@@ -27,3 +32,16 @@ build_script:
 artifacts:
   # Archive the generated packages in the ci.appveyor.com build report.
   - path: dist\hackerfinder.exe
+
+deploy:
+  release: HackerFinder-v$(appveyor_build_version)
+  description: ''
+  provider: GitHub
+  auth_token:
+    secure: hO8+P5Y6D6CC1jg9M05Gt1Vx48Krvig7ddBOgZFtxnLnNhGm1+GUiLyhoW2DdwO4
+  artifact: dist\hackerfinder.exe
+  draft: false
+  prerelease: false
+  on:
+    branch: master                 # release from master branch only
+    appveyor_repo_tag: true        # deploy on tag push only
